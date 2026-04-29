@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "DEBUG=\"grammy*\" deno run --watch --allow-net --allow-import --allow-env --env bot.ts",
+    "start": "deno run --allow-net --allow-import --allow-env --env bot.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "grammy": "https://deno.land/x/grammy@v1.42.0/mod.ts"
+  }
+}
