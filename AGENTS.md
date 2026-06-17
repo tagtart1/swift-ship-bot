@@ -1,0 +1,1 @@
+- Follow Gang of Four (GoF) design patterns and principles when applicable
