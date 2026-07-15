@@ -2,7 +2,7 @@
 
 const { spawn } = require('node:child_process');
 
-const port = '3000';
+const port = process.env.PORT ?? '3000';
 const subdomain = 'swift-ship-dev';
 const expectedUrl = `https://${subdomain}.loca.lt`;
 const startupTimeoutMs = 15_000;
@@ -41,7 +41,9 @@ localtunnel.stdout.on('data', (chunk) => {
 
   const assignedUrl = match[1];
   if (assignedUrl !== expectedUrl) {
-    fail(`Expected LocalTunnel URL ${expectedUrl}, but received ${assignedUrl}`);
+    fail(
+      `Expected LocalTunnel URL ${expectedUrl}, but received ${assignedUrl}`,
+    );
     return;
   }
 

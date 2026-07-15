@@ -44,6 +44,35 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Telegram bot development
+
+Copy `.env.example` to `.env`, then set the development bot token and a webhook
+secret.
+
+Run the Nest application and LocalTunnel in separate terminals:
+
+```bash
+npm run start:dev
+npm run tunnel
+```
+
+Register the configured webhook URL with Telegram:
+
+```bash
+npm run webhook:set
+```
+
+The webhook endpoint is `POST /webhooks/telegram`.
+
+### Bot flows
+
+Send `/start` to see the available commands. `/cheese` and `/milk` each start
+a short conversation that waits for the same user's next text message.
+
+Conversation state is currently kept in memory, so active conversations are
+cleared whenever the application restarts. Replace the storage adapter with a
+shared persistent adapter before running multiple production instances.
+
 ## Run tests
 
 ```bash
