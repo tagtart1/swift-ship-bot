@@ -31,6 +31,25 @@
 $ npm install
 ```
 
+## Database development
+
+Set `DATABASE_URL` in `.env` to the external URL for the development Render
+Postgres database. External connections must use TLS.
+
+```bash
+# Regenerate Prisma Client after changing prisma/schema.prisma
+$ npm run prisma:generate
+
+# Create and apply a development migration after adding or changing models
+$ npm run prisma:migrate:dev -- --name <migration-name>
+
+# Browse and edit development data
+$ npm run prisma:studio
+```
+
+Production should use the database's internal Render URL and run
+`npm run prisma:migrate:deploy` as its pre-deploy command.
+
 ## Compile and run the project
 
 ```bash
@@ -66,8 +85,13 @@ The webhook endpoint is `POST /webhooks/telegram`.
 
 ### Bot flows
 
-Send `/start` to see the available commands. `/cheese` and `/milk` each start
-a short conversation that waits for the same user's next text message.
+Send `/start` to create or synchronize the user's Telegram account, show their
+balance in the welcome photo caption, and display persistent Cheese and Milk
+buttons beneath the message field. The buttons and their `/cheese` and `/milk`
+command equivalents each start a short conversation that waits for the same
+user's next text message.
+The cheese flow presents Blue cheese, Colby Jack, Mozzarella, and Parmesan as
+buttons, then restores the start keyboard after a selection.
 
 Conversation state is currently kept in memory, so active conversations are
 cleared whenever the application restarts. Replace the storage adapter with a

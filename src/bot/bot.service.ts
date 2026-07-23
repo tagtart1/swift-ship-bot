@@ -4,6 +4,7 @@ import { conversations, createConversation } from '@grammyjs/conversations';
 import type { Request, Response } from 'express';
 import { Bot, MemorySessionStorage, webhookCallback } from 'grammy';
 import { cheeseConversation, milkConversation } from './bot.conversations';
+import { BotHandlersService } from './bot-handlers.service';
 import type { BotContext } from './bot.types';
 
 @Injectable()
@@ -13,7 +14,10 @@ export class BotService {
     response: Response,
   ) => Promise<void>;
 
-  constructor(configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    botHandlersService: BotHandlersService,
+  ) {
     const token = configService.getOrThrow<string>('TELEGRAM_BOT_TOKEN');
     const webhookSecret = configService.getOrThrow<string>(
       'TELEGRAM_WEBHOOK_SECRET',
@@ -37,21 +41,7 @@ export class BotService {
     );
     bot.use(createConversation(cheeseConversation));
     bot.use(createConversation(milkConversation));
-
-    bot.command('start', (context) =>
-      context.reply(
-        'Welcome! Choose a flow:\n/cheese - talk about cheese\n/milk - talk about milk',
-      ),
-    );
-    bot.command('cheese', (context) =>
-      context.conversation.enter('cheeseConversation'),
-    );
-    bot.command('milk', (context) =>
-      context.conversation.enter('milkConversation'),
-    );
-    bot.on('message', (context) =>
-      context.reply('Use /start to see the available flows.'),
-    );
+    botHandlersService.register(bot);
 
     this.handleUpdate = webhookCallback(bot, 'express', {
       secretToken: webhookSecret,
